@@ -33,17 +33,17 @@ scene.add(lightHelper, gridHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-function addStar() {
-  const geometry = new THREE.ShapeGeometry(0.25, 24, 24);
-  const material = new THREE.MeshStandardMaterial( {color: 0xffffff} )
-  const star = new THREE.Mesh(geometry, material);
-  const mathUtils = new THREE.MathUtils;
+// function addStar() {
+//   const geometry = new THREE.ShapeGeometry(0.25, 24, 24);
+//   const material = new THREE.MeshStandardMaterial( {color: 0xffffff} )
+//   const star = new THREE.Mesh(geometry, material);
+//   const mathUtils = new THREE.MathUtils;
   
-  const [x, y, z] = Array(3).fill().map(() => mathUtils.randFloatSpread(100));
+//   const [x, y, z] = Array(3).fill().map(() => mathUtils.randFloatSpread(100));
 
-  star.position.set(x, y, z);
-  scene.add(star)
-};
+//   star.position.set(x, y, z);
+//   scene.add(star)
+// };
 
 // Array(200).fill().forEach(addStar);
 
@@ -58,12 +58,38 @@ const ruben = new THREE.Mesh(
 );
 
 const moonTexture = new THREE.TextureLoader().load('moon.jpeg')
+const normalTexture = new THREE.TextureLoader().load('normal.jpeg')
 const moon = new THREE.Mesh(
   new THREE.SphereGeometry(3, 32, 32),
-  new THREE.MeshStandardMaterial({ map: })
+  new THREE.MeshStandardMaterial({ 
+    map: moonTexture,
+    normalMap: normalTexture
+   })
 );
 
-scene.add(ruben);
+scene.add(ruben, moon);
+
+moon.position.z = 30;
+moon.position.x = (-10);
+
+
+function moveCamera(){
+  const t = document.body.getBoundingClientRect().top;
+  moon.rotation.x += 0.05;
+  moon.rotation.y += 0.075;
+  moon.rotation.z += 0.05;
+
+  ruben.rotation.y += 0.01;
+  ruben.rotation.z += 0.01;
+
+  camera.position.z = t * -0.01;
+  camera.position.x = t * -0.0002;
+  camera.position.y = t * -0.0002;
+}
+
+document.body.onscroll = moveCamera;
+
+
 
 function animate(){
   requestAnimationFrame( animate );
